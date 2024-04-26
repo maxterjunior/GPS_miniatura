@@ -5,15 +5,20 @@
 #include "ArduinoOTA.h"
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
+// #include "BluetoothSerial.h"
 
 static const int RXPin = 16, TXPin = 17;  // Los pines RX(20) y TX(21) son propios del ESP32C3
 static const uint32_t GPSBaud = 9600;     // se debe hacer la conexión en pines diferentes para Arduino o ESP
 
 
-#define ssid "MOVISTAR_8F30"
-#define pass "88888888"
+// #define ssid "MOVISTAR_8F30"
+// #define pass "88888888"
 
-String serverName = "http://192.168.100.171:9999/datos-satelite";
+#define ssid "CorAll D&R-2.4G"
+#define pass "coralldr2022"
+
+String serverName = "http://192.168.18.187:9999/datos-satelite";
+// String serverName = "http://192.168.100.171:9999/datos-satelite";
 
 
 /*
@@ -43,7 +48,7 @@ void loop() {
 
   smartDelay(1000);
 
-  if (gps.location.isUpdated()) {
+  // if (gps.location.isUpdated()) {
     printFloat(gps.location.lat(), gps.location.isValid(), 12, 6);
     Serial.print(",");
     printFloat(gps.location.lng(), gps.location.isValid(), 12, 6);
@@ -54,7 +59,7 @@ void loop() {
     Serial.println();
 
     sendPost(gps.location.lat(), gps.location.lng(), gps.satellites.value());
-  }
+  // }
 
   esp_task_wdt_reset();
 
