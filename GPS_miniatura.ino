@@ -14,10 +14,13 @@ static const uint32_t GPSBaud = 9600;     // se debe hacer la conexión en pines
 // #define ssid "MOVISTAR_8F30"
 // #define pass "88888888"
 
-#define ssid "CorAll D&R-2.4G"
-#define pass "coralldr2022"
+// #define ssid "CorAll D&R-2.4G"
+// #define pass "coralldr2022"
 
-String serverName = "http://192.168.18.187:9999/datos-satelite";
+#define ssid "YAWI"
+#define pass "Y@w!.19*"
+
+String serverName = "http://192.168.15.73:9999/datos-satelite";
 // String serverName = "http://192.168.100.171:9999/datos-satelite";
 
 

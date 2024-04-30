@@ -4,7 +4,7 @@
   "description": "Proyecto para mostrar datos de coordenadas recibidos por puerto serial en un mapa en tiempo real usando Node.js",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "bun --hot run app.js"
   },
   "keywords": [
     "mapa",
