@@ -103,10 +103,10 @@ const mapaEstatico = (data) => `
         }).addTo(map);
 
         // Crea un poligono
-        var polygon = L.polygon([${data}]).addTo(map);
+        var polyline = L.polyline([${data}]).addTo(map);
 
         // Focus en el poligono
-        map.fitBounds(polygon.getBounds());
+        map.fitBounds(polyline.getBounds());
  
  
     </script>
@@ -123,18 +123,34 @@ app.get('/', (req, res) => {
   res.send(mapa);
 });
 
-app.get('/mapa', (req, res) => {
+app.get('/registros', (req, res) => {
+  // Validar que exista la carpeta data
+  if (!fs.existsSync('data')) {
+    fs.mkdirSync('data');
+  }
+
+  // Listar los archivos de la carpeta data
+  const files = fs.readdirSync('data');
+
+  const data = files.map((file) =>
+    `<a href="/mapa/${file}">${file}</a>`
+  ).join('<br>');
+
+  res.send(data);
+});
+
+app.get('/registros/:id', (req, res) => {
   let data = ''
   try {
-    const jsonString = fs.readFileSync('data.json');
+    const path = join('data', req.params.id);
+    const jsonString = fs.readFileSync(path, 'utf8');
     const json = JSON.parse(jsonString);
-
     data = json.map(({ latitude, longitude }) => `[${latitude}, ${longitude}]`).join(',');
-
+    res.send(mapaEstatico(data));
   } catch (error) {
     console.log(error);
+    res.send('Error al leer el archivo');
   }
-  res.send(mapaEstatico(data));
 });
 
 
@@ -154,6 +170,7 @@ app.post('/datos-satelite', (req, res) => {
 // Establece una conexión WebSocket para enviar datos seriales al cliente
 const WebSocket = require('ws');
 const ip = require('ip');
+const { join } = require('path');
 
 const wss = new WebSocket.Server({ port: PORT_WS });
 
