@@ -133,7 +133,7 @@ app.get('/registros', (req, res) => {
   const files = fs.readdirSync('data');
 
   const data = files.map((file) =>
-    `<a href="/mapa/${file}">${file}</a>`
+    `<a href="/registros/${file}">${file}</a>`
   ).join('<br>');
 
   res.send(data);
