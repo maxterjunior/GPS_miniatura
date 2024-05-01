@@ -97,7 +97,7 @@ const mapaEstatico = (data) => `
         var map = L.map('map').setView([-8.179427, -79.009833], 10);
         // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         // L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
-        L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+        L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
           maxZoom: 20,
           subdomains:['mt0','mt1','mt2','mt3']
         }).addTo(map);
@@ -169,8 +169,21 @@ app.post('/datos-satelite', (req, res) => {
 
 // Establece una conexión WebSocket para enviar datos seriales al cliente
 const WebSocket = require('ws');
-const ip = require('ip');
 const { join } = require('path');
+
+const { networkInterfaces } = require('os');
+
+const nets = networkInterfaces();
+const ips = []
+
+for (const name of Object.keys(nets)) {
+  for (const net of nets[name]) {
+    const familyV4Value = typeof net.family === 'string' ? 'IPv4' : 4
+    if (net.family === familyV4Value && !net.internal) {
+      ips.push(net.address);
+    }
+  }
+}
 
 const wss = new WebSocket.Server({ port: PORT_WS });
 
@@ -186,7 +199,10 @@ wss.on('connection', () => {
 // }
 
 app.listen(PORT, () => {
-  console.log(`Servidor web activo en http://${ip.address()}:${PORT}`);
+  console.log(`Servidor web activo en: `);
+  ips.forEach(ip => {
+    console.log(`\thttp://${ip}:${PORT}`);
+  });
 });
 
 
