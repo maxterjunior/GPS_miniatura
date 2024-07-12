@@ -37,8 +37,30 @@ const mapa = `
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
-        var map = L.map('map').setView([-8.179427, -79.009833], 10);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        const googleLayer = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+          maxZoom: 20,
+          subdomains:['mt0','mt1','mt2','mt3']
+        });
+        
+        const arcgisonlineLayer = L.tileLayer(
+          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          {
+            maxZoom: 17,
+          }
+        );
+
+        const openStreetMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+
+        var map = L.map('map',{
+          layers: [googleLayer]
+        }).setView([-8.179427, -79.009833], 10);
+
+        const layerControl = L.control.layers({
+          "Google": googleLayer,
+          "Arcgis": arcgisonlineLayer,
+          "OpenStreetMap": openStreetMapLayer
+        }, {}).addTo(map);
 
         // Crea un icono personalizado para mostrar el número de satélites
         var satIcon = L.divIcon({
@@ -94,14 +116,31 @@ const mapaEstatico = (data) => `
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
-        var map = L.map('map').setView([-8.179427, -79.009833], 10);
-        // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        // L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
-        L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+
+        const googleLayer = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
           maxZoom: 20,
           subdomains:['mt0','mt1','mt2','mt3']
-        }).addTo(map);
+        });
+        
+        const arcgisonlineLayer = L.tileLayer(
+          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          {
+            maxZoom: 17,
+          }
+        );
 
+        const openStreetMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+
+        var map = L.map('map',{
+          layers: [googleLayer]
+        }).setView([-8.179427, -79.009833], 10);
+
+        const layerControl = L.control.layers({
+          "Google": googleLayer,
+          "Arcgis": arcgisonlineLayer,
+          "OpenStreetMap": openStreetMapLayer
+        }, {}).addTo(map);
+        
         // Crea un poligono
         var polyline = L.polyline([${data}]).addTo(map);
 
@@ -230,6 +269,20 @@ app.listen(PORT, () => {
 //         maxZoom: 20,
 //         subdomains:['mt0','mt1','mt2','mt3']
 // });
+
+// const googleLayer = L.tileLayer(
+//   "http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}",
+//   {
+//     maxZoom: 20,
+//     subdomains: ["mt0", "mt1", "mt2", "mt3"],
+//   }
+// );
+// const arcgisonlineLayer = L.tileLayer(
+//   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+//   {
+//     maxZoom: 17,
+//   }
+// );
 // Note the difference in the "lyrs" parameter in the URL:
 
 // Hybrid: s,h;
